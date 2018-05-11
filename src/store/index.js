@@ -34,7 +34,6 @@ export const store = {
       username: ""
     }
     availableSafes.doc(strSafeNum).set(safeData)
-    console.log(availableSafes)
   }
 
 }

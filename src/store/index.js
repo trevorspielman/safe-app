@@ -23,10 +23,11 @@ const availableSafes = firebase.firestore().collection('availableSafes')
 
 export const store = {
   currentSafes: [],
-  currentSafe: [],
+  //will need to clean up or adjust current safe. 
+  currentSafe: {},
 
   //adding the new safe number to the availableSafes collection
-  addSafe: (safeNum) =>{
+  addSafe: (safeNum) => {
     var strSafeNum = safeNum.toString()
     var safeData = {
       isConnected: false,
@@ -34,23 +35,22 @@ export const store = {
       username: ""
     }
     availableSafes.doc(strSafeNum).set(safeData)
+    //keeps an eye on changing data, then sets it to the store.currentSafe object for display.
+    availableSafes.onSnapshot((safesRef) => {
+      let tempSafe = availableSafes.doc(strSafeNum)
+      tempSafe.get()
+        .then(res => {
+          store.currentSafe = res.data()
+          console.log("current Safe", strSafeNum, store.currentSafe)
+        })
+    })
   }
 
 }
 
-//gets all safes in teh availableSafes collection
+//gets all safes in the availableSafes collection
 availableSafes.get()
   .then(res => {
     store.currentSafes = res.docs
   })
-
-//collects the data of each safe in the collection and console.logs it.
-availableSafes.onSnapshot((safesRef) => {
-  store.currentSafes.forEach((doc) => {
-    const safe = doc.data()
-    safe.id = doc.id
-    store.currentSafe.push(safe)
-  })
-  console.log(store.currentSafe)
-})
 

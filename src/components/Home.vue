@@ -10,7 +10,7 @@
     </div>
     <div v-else>
       <h1>Welcome: {{store.currentSafe.username}}</h1>
-      <h3>Current Balance: {{store.currentSafe.totalAmount}}</h3>
+      <h3>Current Balance: ${{store.currentSafe.totalAmount}}</h3>
     </div>
   </div>
 </template>

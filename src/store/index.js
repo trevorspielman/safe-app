@@ -23,7 +23,6 @@ const availableSafes = firebase.firestore().collection('availableSafes')
 
 export const store = {
   currentSafes: [],
-  //will need to clean up or adjust current safe. 
   currentSafe: {},
 
   //adding the new safe number to the availableSafes collection

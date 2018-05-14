@@ -37,7 +37,7 @@
         store.addSafe(this.safeNumber)
       },
       unlockSafe() {
-
+        //NEED TO WRITE THIS METHOD!
       }
     },
     computed: {

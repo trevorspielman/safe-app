@@ -4,9 +4,6 @@
     <div v-if="store.currentSafe.isConnected == false">
       <h2>Your safe code is: {{this.safeNumber}}</h2>
       <p>Please use your phone to connect to the safe for your deposit/withdrawl</p>
-      <p v-for="safe in store.currentSafes">
-        <span>{{safe.id}}</span>
-      </p>
     </div>
     <div v-else>
       <h1>Welcome: {{store.currentSafe.username}}</h1>

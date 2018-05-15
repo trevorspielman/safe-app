@@ -20,10 +20,13 @@ firebase.initializeApp(config);
 const firestore = firebase.firestore()
 //a reference to the availableSafes collection
 const availableSafes = firebase.firestore().collection('availableSafes')
+const transactions = firebase.firestore().collection('transactions')
 
 export const store = {
   currentSafes: [],
   currentSafe: {},
+  currentSafeNumber: 0,
+  safeTransactions: [],
 
   //adding the new safe number to the availableSafes collection
   addSafe: (safeNum) => {
@@ -43,7 +46,18 @@ export const store = {
           console.log("current Safe", strSafeNum, store.currentSafe)
         })
     })
-  }
+  },
+
+  //gets all transactions where the safeID matches
+  getTransactions: () =>{
+    transactions.where("safeId", "==", store.currentSafeNumber).get()
+    .then(res =>{
+      res.forEach(doc =>{
+        store.safeTransactions.push(doc.data())
+      })
+    })
+    console.log(store.safeTransactions)
+  } 
 
 }
 

@@ -6,18 +6,14 @@
       <p>Please use your phone to connect to the safe for your deposit/withdrawl</p>
     </div>
     <div v-else>
-      <h1>Welcome: {{store.currentSafe.username}}</h1>
-      <h3>Current Balance: ${{store.currentSafe.totalAmount.toFixed(2)}}</h3>
-      <form action="submit" @submit.prevent="unlockSafe">
-        <input type="number" placeholder="Transaction ID" v-model="transactionId">
-        <button type="submit" class="btn btn-success">Unlock Safe</button>
-      </form>
+      <transaction></transaction>
     </div>
   </div>
 </template>
 
 <script>
   import { store } from '../store'
+  import transaction from './transaction'
   export default {
     name: 'Home',
     mounted() {
@@ -34,11 +30,9 @@
       //Random Number Generator for safe number. Generates on load of page.
       generateSafeNum() {
         this.safeNumber = Math.floor(Math.random() * 9999) + 1000
+        store.currentSafeNumber = this.safeNumber
         store.addSafe(this.safeNumber)
       },
-      unlockSafe() {
-        //NEED TO WRITE THIS METHOD!
-      }
     },
     computed: {
       currentSafes() {
@@ -47,8 +41,10 @@
       currentSafe() {
         return this.$store.currentSafe
       }
+    },
+    components: {
+      transaction,
     }
-
   }
 </script>
 

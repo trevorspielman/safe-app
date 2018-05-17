@@ -21,6 +21,7 @@ const firestore = firebase.firestore()
 //a reference to the availableSafes collection
 const availableSafes = firebase.firestore().collection('availableSafes')
 const transactions = firebase.firestore().collection('transactions')
+const unlockCodes = firebase.firestore().collection('unlockCodes')
 
 export const store = {
   currentSafes: [],
@@ -43,21 +44,40 @@ export const store = {
       tempSafe.get()
         .then(res => {
           store.currentSafe = res.data()
-          console.log("current Safe", strSafeNum, store.currentSafe)
         })
     })
   },
 
   //gets all transactions where the safeID matches
-  getTransactions: () =>{
-    transactions.where("safeId", "==", store.currentSafeNumber).get()
-    .then(res =>{
-      res.forEach(doc =>{
-        store.safeTransactions.push(doc.data())
-      })
+  getTransactions: () => {
+    transactions.onSnapshot((transactionsRef) => {
+      let strSafeId = store.currentSafeNumber.toString()
+      var tempTransactionRegister = []
+      transactions.where("safeId", "==", strSafeId).get()
+        .then(res => {
+          res.forEach(doc => {
+            tempTransactionRegister.push(doc.data())
+          })
+          store.safeTransactions = tempTransactionRegister
+        })
+      console.log(store.safeTransactions)
     })
-    console.log(store.safeTransactions)
-  } 
+  },
+  unlockSafe: (transactionId) => {
+    let unlockCode = transactionId + "-" + store.currentSafeNumber
+    let unlockData = {
+      transactionComplete: true
+    }
+    unlockCodes.doc(unlockCode).set(unlockData)
+  },
+  lockSafe: (transactionId) => {
+    let unlockCode = transactionId + "-" + store.currentSafeNumber
+    let unlockData = {
+      transactionComplete: false
+    }
+    unlockCodes.doc(unlockCode).set(unlockData)
+    unlockCodes.doc(unlockCode).delete()
+  }
 
 }
 

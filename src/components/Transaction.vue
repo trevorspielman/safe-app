@@ -1,11 +1,16 @@
 <template>
   <div class="transaction">
     <h1>Welcome: {{store.currentSafe.username}}</h1>
-    <h3>Current Balance: ${{store.currentSafe.totalAmount.toFixed(2)}}</h3>
-    <form action="submit" @submit.prevent="unlockSafe">
-      <input type="number" placeholder="Transaction ID" v-model.number="transactionId">
-      <button type="submit" class="btn btn-success">Unlock Safe</button>
-    </form>
+    <h3>Current Balance: ${{store.currentSafe.totalAmount}}</h3>
+    <div v-if="this.safeOpen == false">
+      <form action="submit" @submit.prevent="unlockSafe">
+        <input type="number" placeholder="Transaction ID" v-model.number.lazy="transactionId">
+        <button type="submit" class="btn btn-success">Unlock Safe</button>
+      </form>
+    </div>
+    <div v-else>
+      <button class="btn btn-danger" @click="lockSafe">Lock Safe</button>
+    </div>
     <div v-for="transaction in store.safeTransactions">
       <p>Transaction Type: {{transaction.transType}}</p>
       <p>Bills: ${{transaction.bills}}</p>
@@ -27,14 +32,27 @@
       return {
         store,
         transactionId: 0,
+        safeOpen: false,
       }
     },
     methods: {
-      getTransactions(){
-        store.getTransactions(store.currentSafeNumber)
+      getTransactions() {
+        store.getTransactions()
       },
       unlockSafe() {
-        store.getTransactions(store.currentSafeNumber)
+        this.safeOpen = true
+        store.unlockSafe(this.transactionId)
+      },
+      lockSafe() {
+        this.safeOpen = false
+        store.lockSafe(this.transactionId)
+        store.getTransactions()
+        var total = 0 
+        for (let i = 0; i < store.safeTransactions.length; i++) {
+          const transaction = store.safeTransactions[i];
+          total += Number(transaction.total)
+          store.currentSafe.totalAmount = total
+        }
       }
     },
     computed: {
@@ -43,7 +61,7 @@
       },
       currentSafe() {
         return this.$store.currentSafe
-      }
+      },
     }
 
   }

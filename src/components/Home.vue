@@ -29,7 +29,7 @@
     methods: {
       //Random Number Generator for safe number. Generates on load of page.
       generateSafeNum() {
-        this.safeNumber = Math.floor(Math.random() * 9999) + 1000
+        this.safeNumber = Math.floor(Math.random() * (9999-1000)) + 1000
         store.currentSafeNumber = this.safeNumber
         store.addSafe(this.safeNumber)
       },

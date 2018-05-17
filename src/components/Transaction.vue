@@ -9,7 +9,7 @@
       </form>
     </div>
     <div v-else>
-      <button class="btn btn-danger" @click="lockSafe">Lock Safe</button>
+      <button class="btn btn-danger" @click="lockSafe">Close & Lock Safe</button>
     </div>
     <div v-for="transaction in store.safeTransactions">
       <p>Transaction Type: {{transaction.transType}}</p>
@@ -26,7 +26,6 @@
   export default {
     name: 'transaction',
     mounted() {
-      this.getTransactions()
     },
     data() {
       return {
@@ -42,17 +41,11 @@
       unlockSafe() {
         this.safeOpen = true
         store.unlockSafe(this.transactionId)
+        store.getTransactions()
       },
       lockSafe() {
         this.safeOpen = false
         store.lockSafe(this.transactionId)
-        store.getTransactions()
-        var total = 0 
-        for (let i = 0; i < store.safeTransactions.length; i++) {
-          const transaction = store.safeTransactions[i];
-          total += Number(transaction.total)
-          store.currentSafe.totalAmount = total
-        }
       }
     },
     computed: {
@@ -61,9 +54,8 @@
       },
       currentSafe() {
         return this.$store.currentSafe
-      },
-    }
-
+      }
+    },
   }
 </script>
 

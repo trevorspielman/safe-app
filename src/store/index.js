@@ -50,33 +50,42 @@ export const store = {
 
   //gets all transactions where the safeID matches
   getTransactions: () => {
-    transactions.onSnapshot((transactionsRef) => {
+    availableSafes.onSnapshot((transactionsRef) => {
       let strSafeId = store.currentSafeNumber.toString()
       var tempTransactionRegister = []
-      transactions.where("safeId", "==", strSafeId).get()
+      availableSafes.doc(strSafeId).collection("transactions").where("safeId", "==", strSafeId).get()
         .then(res => {
           res.forEach(doc => {
             tempTransactionRegister.push(doc.data())
           })
           store.safeTransactions = tempTransactionRegister
+          //calculates total for display as well as updating total on the safe doc.
+          var total = 0
+          for (let i = 0; i < store.safeTransactions.length; i++) {
+            const transaction = store.safeTransactions[i];
+            total += Number(transaction.total)
+            store.currentSafe.totalAmount = total
+          }
+          availableSafes.doc(strSafeId).update({ totalAmount: store.currentSafe.totalAmount})
         })
       console.log(store.safeTransactions)
     })
   },
   unlockSafe: (transactionId) => {
     let unlockCode = transactionId + "-" + store.currentSafeNumber
-    let unlockData = {
-      transactionComplete: true
-    }
-    unlockCodes.doc(unlockCode).set(unlockData)
+    unlockCodes.doc(unlockCode).update({ transactionComplete: true })
+      .then(res => {
+        store.getTransactions()
+      })
   },
   lockSafe: (transactionId) => {
+    store.getTransactions()
     let unlockCode = transactionId + "-" + store.currentSafeNumber
-    let unlockData = {
-      transactionComplete: false
-    }
-    unlockCodes.doc(unlockCode).set(unlockData)
-    unlockCodes.doc(unlockCode).delete()
+    let strSafeId = store.currentSafeNumber.toString()
+    unlockCodes.doc(unlockCode).update({ transactionComplete: false })
+      .then(res => {
+        unlockCodes.doc(unlockCode).delete()
+      })
   }
 
 }
@@ -86,4 +95,3 @@ availableSafes.get()
   .then(res => {
     store.currentSafes = res.docs
   })
-

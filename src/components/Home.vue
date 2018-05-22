@@ -1,12 +1,12 @@
 <template>
   <div class="home">
-    <div v-if="store.currentSafe.isConnected == false">
+    <div v-if="store.currentSafe.isConnected == true">
+      <transaction></transaction>
+    </div>
+    <div v-else>
       <h1>Welcome to the SafeApp</h1>
       <h2>Your safe code is: {{this.safeNumber}}</h2>
       <p>Please use your phone to connect to the safe for your deposit/withdrawl</p>
-    </div>
-    <div v-else>
-      <transaction></transaction>
     </div>
   </div>
 </template>

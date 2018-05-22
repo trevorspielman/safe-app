@@ -28,6 +28,7 @@ export const store = {
   currentSafe: {},
   currentSafeNumber: 0,
   safeTransactions: [],
+  safeOpen: false,
 
   //adding the new safe number to the availableSafes collection
   addSafe: (safeNum) => {
@@ -66,17 +67,21 @@ export const store = {
             total += Number(transaction.total)
             store.currentSafe.totalAmount = total
           }
-          availableSafes.doc(strSafeId).update({ totalAmount: store.currentSafe.totalAmount})
+          availableSafes.doc(strSafeId).update({ totalAmount: store.currentSafe.totalAmount })
         })
       console.log(store.safeTransactions)
     })
   },
   unlockSafe: (transactionId) => {
     let unlockCode = transactionId + "-" + store.currentSafeNumber
-    unlockCodes.doc(unlockCode).update({ transactionComplete: true })
+    if (unlockCode != (0+'-'+store.currentSafeNumber)) {
+      store.safeOpen = true
+      console.log("am I getting here?")
+      unlockCodes.doc(unlockCode).update({ transactionComplete: true })
       .then(res => {
         store.getTransactions()
       })
+    }
   },
   lockSafe: (transactionId) => {
     store.getTransactions()

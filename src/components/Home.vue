@@ -13,7 +13,7 @@
 
 <script>
   import { store } from '../store'
-  import transaction from './transaction'
+  import transaction from './Transaction'
   export default {
     name: 'Home',
     mounted() {

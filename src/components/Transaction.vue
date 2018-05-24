@@ -14,9 +14,7 @@
     </div>
     <div v-for="transaction in store.safeTransactions">
       <p>Transaction Type: {{transaction.transType}}</p>
-      <p>Bills: ${{transaction.bills}}</p>
-      <p>Coins: ${{transaction.coins}}</p>
-      <p>Checks: ${{transaction.checks}}</p>
+      <p>Date: {{transaction.createdAt}}</p>
       <p>Total: ${{transaction.total}}</p>
     </div>
   </div>

@@ -64,23 +64,26 @@ export const store = {
           var total = 0
           for (let i = 0; i < store.safeTransactions.length; i++) {
             const transaction = store.safeTransactions[i];
-            total += Number(transaction.total)
+            if (transaction.transType == "withdrawal") {
+              total -= Number(transaction.total)
+            }
+            else {
+              total += Number(transaction.total)
+            }
             store.currentSafe.totalAmount = total
           }
           availableSafes.doc(strSafeId).update({ totalAmount: store.currentSafe.totalAmount })
         })
-      console.log(store.safeTransactions)
     })
   },
   unlockSafe: (transactionId) => {
     let unlockCode = transactionId + "-" + store.currentSafeNumber
-    if (unlockCode != (0+'-'+store.currentSafeNumber)) {
+    if (unlockCode != (0 + '-' + store.currentSafeNumber)) {
       store.safeOpen = true
-      console.log("am I getting here?")
       unlockCodes.doc(unlockCode).update({ transactionComplete: true })
-      .then(res => {
-        store.getTransactions()
-      })
+        .then(res => {
+          store.getTransactions()
+        })
     }
   },
   lockSafe: (transactionId) => {
@@ -90,6 +93,7 @@ export const store = {
     unlockCodes.doc(unlockCode).update({ transactionComplete: false })
       .then(res => {
         unlockCodes.doc(unlockCode).delete()
+        console.log("safe code deleted")
       })
   }
 

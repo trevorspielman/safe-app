@@ -20,7 +20,6 @@ firebase.initializeApp(config);
 const firestore = firebase.firestore()
 //a reference to the availableSafes collection
 const availableSafes = firebase.firestore().collection('availableSafes')
-const transactions = firebase.firestore().collection('transactions')
 const unlockCodes = firebase.firestore().collection('unlockCodes')
 
 export const store = {
@@ -64,7 +63,7 @@ export const store = {
           var total = 0
           for (let i = 0; i < store.safeTransactions.length; i++) {
             const transaction = store.safeTransactions[i];
-            if (transaction.transType == "withdrawal") {
+            if (transaction.transType == "Withdrawal") {
               total -= Number(transaction.total)
             }
             else {

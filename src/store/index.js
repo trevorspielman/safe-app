@@ -80,9 +80,6 @@ export const store = {
     if (unlockCode != (0 + '-' + store.currentSafeNumber)) {
       store.safeOpen = true
       unlockCodes.doc(unlockCode).update({ transactionComplete: true })
-        .then(res => {
-          store.getTransactions()
-        })
     }
   },
   lockSafe: (transactionId) => {

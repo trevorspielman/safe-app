@@ -24,6 +24,7 @@ const unlockCodes = firebase.firestore().collection('unlockCodes')
 
 export const store = {
   currentSafes: [],
+  unlockCodes: [],
   currentSafe: {},
   currentSafeNumber: 0,
   safeTransactions: [],
@@ -77,9 +78,12 @@ export const store = {
   },
   unlockSafe: (transactionId) => {
     let unlockCode = transactionId + "-" + store.currentSafeNumber
-    if (unlockCode != (0 + '-' + store.currentSafeNumber)) {
+    if (store.unlockCodes.includes(unlockCode.toString())) {
       store.safeOpen = true
       unlockCodes.doc(unlockCode).update({ transactionComplete: true })
+    }
+    else {
+      alert("Invalid Unlock Code.")
     }
   },
   lockSafe: (transactionId) => {
@@ -100,3 +104,12 @@ availableSafes.get()
   .then(res => {
     store.currentSafes = res.docs
   })
+
+unlockCodes.onSnapshot((transactionsRef) => {
+  unlockCodes.get()
+    .then(res => {
+      res.forEach(doc => {
+        store.unlockCodes.push(doc.id)
+      })
+    })
+})

@@ -54,7 +54,7 @@ export const store = {
     availableSafes.onSnapshot((transactionsRef) => {
       let strSafeId = store.currentSafeNumber.toString()
       var tempTransactionRegister = []
-      availableSafes.doc(strSafeId).collection("transactions").where("safeId", "==", strSafeId).get()
+      availableSafes.doc(strSafeId).collection("transactions").where("safeId", "==", strSafeId).orderBy('createdAt').get()
         .then(res => {
           res.forEach(doc => {
             tempTransactionRegister.push(doc.data())

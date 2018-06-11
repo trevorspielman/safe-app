@@ -15,7 +15,7 @@
           <input type="number" placeholder="Transaction ID" v-model.number.lazy="transactionId">
           <button type="submit" class="btn btn-success">Unlock Safe</button>
         </form> -->
-  
+
         <table class="table">
           <tbody>
             <tr>
@@ -38,7 +38,7 @@
             </tr>
           </tbody>
         </table>
-        <h4>Safe Code: {{this.transactionId}}</h4>
+        <h4>Safe Code: {{store.transactionId}}</h4>
         <button class="btn btn-block btn-success" @click="unlockSafe">Unlock Safe</button>
         <button class="btn btn-danger mt-4" @click="clear">Clear</button>
       </div>
@@ -86,18 +86,18 @@
         store.getTransactions()
       },
       enterCode(num) {
-        this.transactionId = this.transactionId.concat(num)
+        store.transactionId = store.transactionId.concat(num)
       },
       clear() {
-        this.transactionId = ''
+        store.transactionId = ''
       },
       unlockSafe() {
-        store.unlockSafe(this.transactionId)
+        store.unlockSafe(store.transactionId)
       },
       lockSafe() {
         store.safeOpen = false
-        store.lockSafe(this.transactionId)
-        this.transactionId = ''
+        store.lockSafe(store.transactionId)
+        store.transactionId = ''
       }
     },
     computed: {
@@ -121,7 +121,8 @@
     margin: 4rem 0rem;
     width: 50vw
   }
-  .numPad .table{
+
+  .numPad .table {
     width: 50%;
   }
 
@@ -139,7 +140,8 @@
     margin: 4rem 0rem;
     width: 50vw
   }
-  .transactions td{
+
+  .transactions td {
     border-bottom: solid 1px black
   }
 </style>

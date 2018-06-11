@@ -29,6 +29,7 @@ export const store = {
   currentSafeNumber: 0,
   safeTransactions: [],
   safeOpen: false,
+  transactionId: '',
 
   //adding the new safe number to the availableSafes collection
   addSafe: (safeNum) => {
@@ -84,9 +85,11 @@ export const store = {
     }
     else {
       alert("Invalid Unlock Code.")
+      store.transactionId = ''
     }
   },
   lockSafe: (transactionId) => {
+    console.log(transactionId)
     store.getTransactions()
     let unlockCode = transactionId + "-" + store.currentSafeNumber
     let strSafeId = store.currentSafeNumber.toString()
